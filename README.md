@@ -1,0 +1,2 @@
+# ScoreRecognition
+Music OCR project
