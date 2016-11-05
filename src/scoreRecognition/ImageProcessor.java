@@ -10,12 +10,12 @@ import org.opencv.imgproc.Imgproc;
 public class ImageProcessor {
     private Mat grayscaledMat;
     private Mat binarizedMat;
-
+    
     ImageProcessor() {
         grayscaledMat = new Mat();
         binarizedMat = new Mat();
     }
-
+    
     public void grayScale(Mat image) {
         try {
             Imgproc.cvtColor(image, grayscaledMat, Imgproc.COLOR_RGB2GRAY);
@@ -23,7 +23,7 @@ public class ImageProcessor {
             throw new CvException("Failed to make gray Scale. Exception thrown: " + e);
         }
     }
-
+    
     public void binarize(Mat image) {
         try {
             Imgproc.threshold(image, binarizedMat, Imgproc.THRESH_BINARY, 255, Imgproc.THRESH_OTSU);
@@ -32,11 +32,11 @@ public class ImageProcessor {
             throw new CvException("Failed to make binary image. Exception thrown: " + e);
         }
     }
-
+    
     public Mat getGrayscaledMat() {
         return grayscaledMat;
     }
-
+    
     public Mat getBinarizedMat() {
         return binarizedMat;
     }

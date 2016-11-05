@@ -12,11 +12,11 @@ import java.awt.image.DataBufferByte;
  */
 public class ImageViewer {
     private JLabel imageView;
-
+    
     public void show(Mat image){
         show(image, "");
     }
-
+    
     public void show(Mat image, String windowName) {
         setSystemLookAndFeel();
         JFrame frame = createJFrame(windowName, image.width()+5, image.height()+5);
@@ -26,7 +26,7 @@ public class ImageViewer {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    
     public void show(Mat image, String windowName, int width, int height) {
         setSystemLookAndFeel();
         JFrame frame = createJFrame(windowName, width, height);
@@ -36,7 +36,7 @@ public class ImageViewer {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    
     private JFrame createJFrame(String windowName, int width, int height) {
         JFrame frame = new JFrame(windowName);
         imageView = new JLabel();
@@ -46,7 +46,7 @@ public class ImageViewer {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
     }
-
+    
     private void setSystemLookAndFeel() {
         try {
             UIManager.setLookAndFeel
@@ -61,7 +61,7 @@ public class ImageViewer {
             e.printStackTrace();
         }
     }
-
+    
     public Image toBufferedImage(Mat matrix) {
         int type = BufferedImage.TYPE_BYTE_GRAY;
         if ( matrix.channels() > 1 ) {

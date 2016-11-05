@@ -9,22 +9,22 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class ImageLoader {
     String inputPath;
     Mat inputMat;
-
+    
     ImageLoader(){}
-
+    
     public void loadImage(String picPath) {
         inputPath = picPath;
         inputMat = Imgcodecs.imread(inputPath);
     }
-
+    
     public String getInputPath() {
         return inputPath;
     }
-
+    
     public Mat getInputMat() {
         return inputMat;
     }
-
+    
     /*public void displayInputImage() {
         if(inputMat.dataAddr()==0){
             System.out.println("Couldn't open file " + inputPath);
@@ -33,7 +33,7 @@ public class ImageLoader {
             imageViewer.show(inputMat, "Loaded image");
         }
     }*/
-
+    
     public void saveMat(Mat saveMat, String savePath) {
         Imgcodecs.imwrite(savePath, saveMat);
     }
