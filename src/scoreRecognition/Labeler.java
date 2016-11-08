@@ -66,6 +66,6 @@ public class Labeler {
     }
     
     public void coloringLabel() {
-        //int[][] colors = new ArrayList<>
+        
     }
 }
