@@ -9,7 +9,9 @@ public class ScoreRecognition {
     }
     
 	public static void main(String[] args) {
+        TestClass test = new TestClass();
         ImageViewer viewer = new ImageViewer();
+        
         
         //load image
         ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
@@ -20,7 +22,7 @@ public class ScoreRecognition {
         ImageProcessor processor = new ImageProcessor();
         processor.grayScale(loader.getInputMat());
         processor.binarize(processor.getGrayscaledMat());
-        
+        viewer.show(processor.getGrayscaledMat());
         
         /*ImageLoader loader1 = new ImageLoader("./pictures/rest.png");
         ImageProcessor processor1 = new ImageProcessor();
@@ -33,10 +35,11 @@ public class ScoreRecognition {
         Labeler labeler = new Labeler(processor.getBinarizedMat());
         //labeler.setInputMat(processor1.getBinarizedMat());
         
-        //viewer.show(labeler.getInputMat());
-        System.out.println(labeler.getLabelNum());
-        
-        
+        // - Staff
+        StaffProcessor staffProcessor = new StaffProcessor(processor.getBinarizedMat());
+        test.matInfo(staffProcessor.getLinesMat());
+        test.matInfo(staffProcessor.getLinedMat());
+        //viewer.show(staffProcessor.getLinedMat());
         //viewer.show(processor.getBinarizedMat());
     }
 }
