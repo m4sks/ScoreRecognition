@@ -22,6 +22,7 @@ public class ImageProcessor {
         }catch (CvException e) {
             throw new CvException("Failed to make gray Scale. Exception thrown: " + e);
         }
+        System.out.println("GrayScale - " + image);
     }
     
     public void binarize(Mat image) {
@@ -31,6 +32,7 @@ public class ImageProcessor {
         }catch (CvException e) {
             throw new CvException("Failed to make binary image. Exception thrown: " + e);
         }
+        System.out.println("Binarize - " + image);
     }
     
     public Mat getGrayscaledMat() {

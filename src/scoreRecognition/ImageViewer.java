@@ -25,6 +25,7 @@ public class ImageViewer {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        setPrint(image);
     }
     
     public void show(Mat image, String windowName, int width, int height) {
@@ -35,6 +36,7 @@ public class ImageViewer {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        setPrint(image);
     }
     
     private JFrame createJFrame(String windowName, int width, int height) {
@@ -74,5 +76,9 @@ public class ImageViewer {
         final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         System.arraycopy(buffer, 0, targetPixels, 0, buffer.length);
         return image;
+    }
+    
+    private void setPrint(Mat image) {
+        System.out.println("View " + image);
     }
 }

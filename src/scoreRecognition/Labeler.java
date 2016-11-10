@@ -35,14 +35,15 @@ public class Labeler {
         labeledMat = new Mat(input.size(), CvType.CV_32S);
         stats = new Mat();
         centroids = new Mat();
-        labelNum = Imgproc.connectedComponents(inputMat, labeledMat);
+        //labelNum = Imgproc.connectedComponents(inputMat, labeledMat);
     }
     
     public void labeling() {
         //labelNum = Imgproc.connectedComponentsWithStats(inputMat, labeledMat, stats, centroids);
         //labelNum = connectedComponentsWithStats(input, labeledMat, stats, centroids, 8, 4);
         //labelNum = connectedComponents(input, labeledMat, 8, 4);
-        Imgproc.connectedComponents(inputMat, labeledMat, 8, CvType.CV_32S);
+        labelNum = Imgproc.connectedComponents(inputMat, labeledMat, 8, CvType.CV_32S);
+        System.out.println("Labeling - " + labelNum);
     }
     
     public Mat getInputMat() {

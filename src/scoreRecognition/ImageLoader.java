@@ -13,6 +13,7 @@ public class ImageLoader {
     ImageLoader(String picPath){
         inputPath = picPath;
         inputMat = Imgcodecs.imread(inputPath);
+        System.out.println("Load image from " + inputPath);
     }
     
     public String getInputPath() {
