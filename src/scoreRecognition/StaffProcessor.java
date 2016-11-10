@@ -37,7 +37,7 @@ public class StaffProcessor {
         Imgproc.Canny(inputMat, edgesMat, 150,100 );
         //Imgproc.HoughLinesP(edgesMat, linesMat, 5, Math.PI/180, 200, 30, 5);
         Imgproc.HoughLines(edgesMat, linesMat, rho, theta, threshold, srn, stn, minTheta, maxTheta);
-        System.out.println("HoughLines by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
+        System.out.println("HoughLines - " + edgesMat + "\n   by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
         
         /*int[] l = new int[4];
         for (int a=0; a < linesMat.cols(); ++a) {

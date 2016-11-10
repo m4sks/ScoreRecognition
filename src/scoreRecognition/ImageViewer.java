@@ -79,6 +79,6 @@ public class ImageViewer {
     }
     
     private void setPrint(Mat image) {
-        System.out.println("View " + image);
+        System.out.println("View - " + image);
     }
 }
