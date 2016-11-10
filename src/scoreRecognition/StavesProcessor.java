@@ -7,7 +7,7 @@ import java.lang.Math;
 /**
  * Created by ev50063 on 2016/11/08.
  */
-public class StaffProcessor {
+public class StavesProcessor {
     private Mat linesMat;
     private Mat edgesMat;
     private double rho = 5;
@@ -24,7 +24,7 @@ public class StaffProcessor {
     private Mat cannyedMat;
     private Mat outputMat;
     
-    StaffProcessor(Mat inputMat) {
+    StavesProcessor(Mat inputMat) {
         //Imgproc.HoughLines();
         //Imgproc.HoughLines(inputMat, lines, rho, theta, threshold, srn, stn, minTheta, maxTheta);
         

@@ -1,7 +1,5 @@
 package scoreRecognition;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
 
 public class ScoreRecognition {
     static {
@@ -13,8 +11,9 @@ public class ScoreRecognition {
         ImageViewer viewer = new ImageViewer();
         
         
-        //load image
-        ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
+        //Load image
+        //ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
+        ImageLoader loader = new ImageLoader("./pictures/quaterNote01.jpg");
         //loader.loadImage("./pictures/clairdelune_fixed.png");
         //viewer.show(loader.getInputMat());
         
@@ -35,11 +34,11 @@ public class ScoreRecognition {
         Labeler labeler = new Labeler(processor.getBinarizedMat());
         //labeler.setInputMat(processor1.getBinarizedMat());
         
-        // - Staff
-        StaffProcessor staffProcessor = new StaffProcessor(processor.getBinarizedMat());
-        test.matInfo(staffProcessor.getLinesMat());
-        test.matInfo(staffProcessor.getLinedMat());
-        //viewer.show(staffProcessor.getLinedMat());
+        // - Staves recognition and procession
+        StavesProcessor stavesProcessor = new StavesProcessor(processor.getBinarizedMat());
+        test.matInfo(stavesProcessor.getLinesMat());
+        test.matInfo(stavesProcessor.getLinedMat());
+        //viewer.show(stavesProcessor.getLinedMat());
         //viewer.show(processor.getBinarizedMat());
     }
 }
