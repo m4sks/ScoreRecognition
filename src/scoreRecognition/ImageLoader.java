@@ -26,5 +26,6 @@ public class ImageLoader {
     
     public void saveMat(Mat saveMat, String savePath) {
         Imgcodecs.imwrite(savePath, saveMat);
+        System.out.println("Save image " + saveMat + " to " + savePath);
     }
 }
