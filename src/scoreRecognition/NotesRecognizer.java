@@ -37,7 +37,7 @@ public class NotesRecognizer {
     private String Eighth = "8th-note";
     private String Sixteenth = "16th-note";
     
-    NotesRecognizer(Mat labeledImage) {
+    NotesRecognizer() {
         
     }
 }
