@@ -3,8 +3,8 @@ package scoreRecognition;
 /**
  * Created by ev50063 on 2016/11/11.
  */
-public class SpecificSymbolsRecognition {
-    SpecificSymbolsRecognition() {
+public class SpecificSymbolsRecognizer {
+    SpecificSymbolsRecognizer() {
         
     }
 }
