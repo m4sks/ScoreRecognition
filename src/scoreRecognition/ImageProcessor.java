@@ -1,5 +1,6 @@
 package scoreRecognition;
 
+import org.opencv.core.Core;
 import org.opencv.core.CvException;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -10,10 +11,12 @@ import org.opencv.imgproc.Imgproc;
 public class ImageProcessor {
     private Mat grayscaledMat;
     private Mat binarizedMat;
+    private Mat invertedMat;
     
     ImageProcessor() {
         grayscaledMat = new Mat();
         binarizedMat = new Mat();
+        invertedMat = new Mat();
     }
     
     public void grayScale(Mat image) {
@@ -35,11 +38,19 @@ public class ImageProcessor {
         System.out.println("Binarize - " + image);
     }
     
+    public void invert(Mat image) {
+        Core.bitwise_not(image, invertedMat);
+    }
+    
     public Mat getGrayscaledMat() {
         return grayscaledMat;
     }
     
     public Mat getBinarizedMat() {
         return binarizedMat;
+    }
+    
+    public Mat getInvertedMat() {
+        return invertedMat;
     }
 }
