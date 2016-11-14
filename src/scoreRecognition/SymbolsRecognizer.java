@@ -8,6 +8,7 @@ import org.opencv.imgproc.Imgproc;
  */
 public class SymbolsRecognizer {
     private Mat labeledMat;
+    //private int labelNum;
     private Mat coloredMat;
     
     SymbolsRecognizer(Mat inputMat) {

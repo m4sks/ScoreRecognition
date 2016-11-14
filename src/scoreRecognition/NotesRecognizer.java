@@ -40,4 +40,19 @@ public class NotesRecognizer {
     NotesRecognizer() {
         
     }
+    
+    public String recognizeNotes() {
+        String output = "";
+        return output;
+    }
+    
+    public boolean judgeBlackNote() {
+        boolean output = true;
+        return output;
+    }
+    
+    public String recognizePitch() {
+        String output = "";
+        return output;
+    }
 }
