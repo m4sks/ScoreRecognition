@@ -41,17 +41,17 @@ public class NotesRecognizer {
         
     }
     
+    public boolean isBlackNote() {
+        boolean output = true;
+        return output;
+    }
+    
     public String recognizeNotes() {
         String output = "";
         return output;
     }
     
-    public boolean judgeBlackNote() {
-        boolean output = true;
-        return output;
-    }
-    
-    public String recognizePitch() {
+    public String recognizeKey() {
         String output = "";
         return output;
     }
