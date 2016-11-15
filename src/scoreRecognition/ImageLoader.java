@@ -13,6 +13,9 @@ public class ImageLoader {
     ImageLoader(String picPath){
         inputPath = picPath;
         inputMat = Imgcodecs.imread(inputPath);
+        if (inputMat == null) {
+            System.out.println("Failed to load image from " + inputPath);
+        }
         System.out.println("Load image from " + inputPath);
     }
     
