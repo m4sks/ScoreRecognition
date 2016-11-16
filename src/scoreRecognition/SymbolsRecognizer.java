@@ -1,10 +1,6 @@
 package scoreRecognition;
 
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-
-import javax.swing.text.View;
-import java.awt.*;
 
 /**
  * Created by ev50063 on 2016/11/11.
@@ -26,6 +22,7 @@ public class SymbolsRecognizer {
         labeler.detectLabels(coloredMat);
         detectedMat = labeler.getDetectedMat();
         roiMat = labeler.getRoiMat();
+        notesRecognizer.recognizeNotes(roiMat[3]);
     }
     
     public Mat getColoredMat() {

@@ -12,8 +12,9 @@ public class ScoreRecognition {
         
         //Load image
         //ImageLoader loader = new ImageLoader("./pictures/quaterNote01.jpg");
-        //ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
-        ImageLoader loader = new ImageLoader("./pictures/dotted-rest.png");
+        ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
+        //ImageLoader loader = new ImageLoader("./pictures/rest.png");
+        //ImageLoader loader = new ImageLoader("./pictures/dotted-rest.png");
         //ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
         
         //image processing
@@ -44,6 +45,6 @@ public class ScoreRecognition {
         //viewer.show(loader.getInputMat());
         //viewer.show(processor.getInvertedMat());
         viewer.show(symbolsRecognizer.getDetectedMat());
-        viewer.show(symbolsRecognizer.getRoiMat()[7]);
+        viewer.show(symbolsRecognizer.getRoiMat()[3]);
     }
 }
