@@ -45,6 +45,10 @@ public class ScoreRecognition {
         //viewer.show(loader.getInputMat());
         //viewer.show(processor.getInvertedMat());
         viewer.show(symbolsRecognizer.getDetectedMat());
-        viewer.show(symbolsRecognizer.getRoiMat()[3]);
+        //viewer.show(symbolsRecognizer.getRoiMat()[3]);
+        String labelNumber = "";
+        for (int i = 1; i < symbolsRecognizer.getRoiMat().length; i++) {
+            viewer.show(symbolsRecognizer.getRoiMat()[i], labelNumber + i);
+        }
     }
 }

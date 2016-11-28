@@ -34,7 +34,6 @@ public class Labeler {
     }
     
     public void sortLabels() {
-        //int labelTemp = 0;
         Mat[] statTemp = new Mat[labelNum];
         Mat[] centTemp = new Mat[labelNum];
         for (int i = 1; i < labelNum - 1; i++) {
@@ -68,6 +67,55 @@ public class Labeler {
             System.out.println(stats.get(i, 0)[0]);
         }*/
         System.out.println("SortLabels");
+    }
+    
+    public void detectLabels(Mat inputMat) {
+        detectedMat = inputMat.clone();
+        //int rectsNum = stats.rows();
+        double left, top, width, height;
+        //Scalar color = new Scalar(0, 255, 0);
+        //String label = "";
+        rects = new Rect[labelNum];
+        roiMat = new Mat[labelNum];
+        for (int i = 1; i < labelNum ; i++) {
+            left = stats.get(i, 0)[0];
+            top = stats.get(i, 1)[0];
+            width = stats.get(i, 2)[0];
+            height = stats.get(i, 3)[0];
+            Point pt1 = new Point(left, top);
+            Point pt2 = new Point(left + width, top + height);
+            rects[i] = new Rect(pt1, pt2);
+            //roiMat[i] = inputMat.clone();
+            roiMat[i] = new Mat(inputMat, rects[i]);
+            /*for (int k = 0; k < roiMat[i].rows(); k++) {
+                for (int l = 0; l < roiMat[i].cols(); l++) {
+                    if (labeledMat.get(k, l)[0] != i) {
+                        roiMat[i].put(k, l, 0, 0, 0);
+                    }
+                }
+            }*/
+            //Imgproc.rectangle(detectedMat, pt1, pt2, color);
+            //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(0, 255, 255), 2);
+            //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_ITALIC, 0.7, new Scalar(0, 255, 255), 2);
+        }
+        System.out.println("Detect Labels - " + detectedMat);
+    }
+    
+    public void drawLabelRect(Mat inputMat) {
+        if (inputMat.channels() != 3) {
+            Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_GRAY2BGR);
+            System.out.println("Gray to BGR");
+        }
+        Point p1, p2;
+        Scalar color = new Scalar(0, 255, 0);
+        String label = "";
+        for (int i = 1; i < labelNum ; i++) {
+            p1 = rects[i].tl();
+            p2 = rects[i].br();
+            Imgproc.rectangle(inputMat, p1, p2, color);
+            Imgproc.putText(inputMat, label + i, new Point(p1.x + 5, p1.y + 20), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(0, 255, 255), 2);
+            //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_ITALIC, 0.7, new Scalar(0, 255, 255), 2);
+        }
     }
     
     public void coloringLabels() {
@@ -107,37 +155,6 @@ public class Labeler {
         }
         System.out.print("end - ");
         System.out.println(coloredMat);
-    }
-    
-    public void detectLabels(Mat inputColoredMat) {
-        detectedMat = inputColoredMat.clone();
-        int rectsNum = stats.rows();
-        double left, top, width, height;
-        Scalar color = new Scalar(0, 255, 0);
-        String label = "";
-        rects = new Rect[rectsNum];
-        roiMat = new Mat[rectsNum];
-        for (int i = 1; i < rectsNum ; i++) {
-            left = stats.get(i, 0)[0];
-            top = stats.get(i, 1)[0];
-            width = stats.get(i, 2)[0];
-            height = stats.get(i, 3)[0];
-            Point pt1 = new Point(left, top);
-            Point pt2 = new Point(left + width, top + height);
-            rects[i] = new Rect(pt1, pt2);
-            roiMat[i] = inputMat.clone();
-            for (int k = 0; k < roiMat[i].rows(); k++) {
-                for (int l = 0; l < roiMat[i].cols(); l++) {
-                    if (labeledMat.get(k, l)[0] != i) {
-                        roiMat[i].put(k, l, 0, 0, 0);
-                    }
-                }
-            }
-            Imgproc.rectangle(detectedMat, pt1, pt2, color);
-            Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(0, 255, 255), 2);
-            //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_ITALIC, 0.7, new Scalar(0, 255, 255), 2);
-        }
-        System.out.println("Detect Labels - " + detectedMat);
     }
     
     public Mat getInputMat() {

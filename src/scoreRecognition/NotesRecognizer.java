@@ -62,11 +62,11 @@ public class NotesRecognizer {
         processor.invert(processor.getBinarizedMat());
         Mat templateMat = processor.getInvertedMat().clone();
         
-        test.matInfo(inputRoiMat);
-        test.matInfo(templateMat);
+        //test.matInfo(inputRoiMat);
+        //test.matInfo(templateMat);
         try {
-            Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCOEFF_NORMED);
-            //Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCORR_NORMED);
+            //Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCOEFF_NORMED);
+            Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCORR_NORMED);
         }catch (CvException e) {
             throw new CvException("Failed to matchTemplate. Exception thrown: " + e);
         }
@@ -80,7 +80,7 @@ public class NotesRecognizer {
             Imgproc.rectangle(inputRoiMat, maxp, pt2, new Scalar(0, 0, 255));
             //ImageViewer viewer = new ImageViewer();
             //viewer.show(templateMat);
-            Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
+            //Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
         }
         return output;
     }
