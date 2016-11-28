@@ -18,25 +18,22 @@ public class ImageViewer {
     }
     
     public void show(Mat image, String windowName) {
-        setSystemLookAndFeel();
-        JFrame frame = createJFrame(windowName, image.width()+5, image.height()+5);
-        Image loadedImage = toBufferedImage(image);
-        imageView.setIcon(new ImageIcon(loadedImage));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        setPrint(image);
+        show(image, windowName, image.width() + 5, image.height() + 5);
     }
     
     public void show(Mat image, String windowName, int width, int height) {
-        setSystemLookAndFeel();
-        JFrame frame = createJFrame(windowName, width, height);
-        Image loadedImage = toBufferedImage(image);
-        imageView.setIcon(new ImageIcon(loadedImage));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        setPrint(image);
+        try {
+            setSystemLookAndFeel();
+            JFrame frame = createJFrame(windowName, width, height);
+            Image loadedImage = toBufferedImage(image);
+            imageView.setIcon(new ImageIcon(loadedImage));
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            setPrint(image);
+        }catch (Exception e) {
+            System.out.println("Failed to show " + image.toString() + ": " + e);
+        }
     }
     
     private JFrame createJFrame(String windowName, int width, int height) {
