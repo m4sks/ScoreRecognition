@@ -12,10 +12,11 @@ public class ScoreRecognition {
         
         //Load image
         //ImageLoader loader = new ImageLoader("./pictures/quaterNote01.jpg");
-        ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
+        //ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
         //ImageLoader loader = new ImageLoader("./pictures/rest.png");
         //ImageLoader loader = new ImageLoader("./pictures/dotted-rest.png");
-        //ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
+        ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
+        //ImageLoader loader = new ImageLoader("./pictures/linesTest.png");
         
         //image processing
         ImageProcessor processor = new ImageProcessor();
@@ -26,14 +27,15 @@ public class ScoreRecognition {
         
         //image recognition
         // - staves recognition and processing
-        //StavesProcessor stavesProcessor = new StavesProcessor(processor.getBinarizedMat());
-        //test.matInfo(stavesProcessor.getLinesMat());
-        //test.matInfo(stavesProcessor.getLinedMat());
-        //viewer.show(stavesProcessor.getLinedMat());
+        StaveProcessor staveProcessor = new StaveProcessor(processor.getInvertedMat());
+        //StaveProcessor staveProcessor = new StaveProcessor(processor.getBinarizedMat());
+        //test.matInfo(staveProcessor.getLinesMat());
+        //test.matInfo(staveProcessor.getLinedMat());
+        viewer.show(staveProcessor.getLinedMat());
         //viewer.show(processor.getBinarizedMat());
         
         // - labeling and labeled symbol recognition
-        SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
+        //SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
         
         /*for (int i = 0; i < symbolsRecognizer.getLabeledMat().rows(); i++) {
             for (int j = 0; j < symbolsRecognizer.getLabeledMat().cols(); j++) {
@@ -44,11 +46,11 @@ public class ScoreRecognition {
         
         //viewer.show(loader.getInputMat());
         //viewer.show(processor.getInvertedMat());
-        viewer.show(symbolsRecognizer.getDetectedMat());
+        //viewer.show(symbolsRecognizer.getDetectedMat());
         //viewer.show(symbolsRecognizer.getRoiMat()[3]);
-        String labelNumber = "";
+        /*String labelNumber = "";
         for (int i = 1; i < symbolsRecognizer.getRoiMat().length; i++) {
             viewer.show(symbolsRecognizer.getRoiMat()[i], labelNumber + i);
-        }
+        }*/
     }
 }
