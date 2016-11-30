@@ -40,6 +40,7 @@ public class ImageProcessor {
     
     public void invert(Mat image) {
         Core.bitwise_not(image, invertedMat);
+        System.out.println("Invert - " + image);
     }
     
     public Mat getGrayscaledMat() {
