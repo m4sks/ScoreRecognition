@@ -28,14 +28,12 @@ public class ScoreRecognition {
         //image recognition
         // - staves recognition and processing
         StaveProcessor staveProcessor = new StaveProcessor(processor.getInvertedMat());
-        //StaveProcessor staveProcessor = new StaveProcessor(processor.getBinarizedMat());
-        //test.matInfo(staveProcessor.getLinesMat());
-        //test.matInfo(staveProcessor.getLinedMat());
         viewer.show(staveProcessor.getLinedMat());
-        //viewer.show(processor.getBinarizedMat());
+        viewer.show(staveProcessor.getRemovedMat());
         
         // - labeling and labeled symbol recognition
-        //SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
+            //SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
+        //SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(staveProcessor.getRemovedMat());
         
         /*for (int i = 0; i < symbolsRecognizer.getLabeledMat().rows(); i++) {
             for (int j = 0; j < symbolsRecognizer.getLabeledMat().cols(); j++) {

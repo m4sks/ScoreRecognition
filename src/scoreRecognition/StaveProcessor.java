@@ -9,7 +9,8 @@ import java.lang.Math;
  */
 public class StaveProcessor {
     private Mat linesMat;
-    private Mat edgesMat;
+    //private Mat edgesMat;
+    
     private double rho = 3.0;
     private double theta = Math.PI / 180.0 * 90.0;
     private int threshold = 300;
@@ -21,19 +22,24 @@ public class StaveProcessor {
     private int minLineLength = 0;
     private int maxLineGap = 3;
     
-    private Mat cannyedMat;
+    //private Mat cannyedMat;
     private Mat linedMat;
-    private Mat outputMat;
+    private Mat removedMat;
     
     private int linesNum;
     private double[] meanY;
+    private double meanYDif;
+    private double lineSpace;
+    private double linesWidth;
+    //private double staveSpace;
+    private Mat spacePosLines;
     
     StaveProcessor(Mat inputMat) {
         TestClass test = new TestClass();
-        edgesMat = new Mat();
+        //edgesMat = new Mat();
         linesMat = new Mat();
         linedMat = inputMat.clone();
-        outputMat = new Mat();
+        removedMat = inputMat.clone();
             //Imgproc.HoughLines();
             //Imgproc.HoughLines(inputMat, lines, rho, theta, threshold, srn, stn, minTheta, maxTheta);
         
@@ -54,7 +60,6 @@ public class StaveProcessor {
     
         minLineLength = (int)(inputMat.cols() * 0.6);
         Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold, minLineLength, maxLineGap);
-        //Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold);
         //System.out.println("HoughLines - " + inputMat + "\n   by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
         linesNum = linesMat.rows();
         System.out.println("HoughLinesP - " + inputMat);
@@ -65,6 +70,8 @@ public class StaveProcessor {
         drawLines();
         test.matChannel(linesMat, 4);
         test.matInfo(linedMat, "linedMat");
+        calcWidth();
+        removeStave();
     }
     
     private void sortStave() {
@@ -90,10 +97,20 @@ public class StaveProcessor {
     private void calcWidth() {
         meanY = new double[linesNum];
         double[] yDif = new double[linesNum - 1];
+        double sumYDif = 0;
         for (int i = 0; i < linesNum; i++) {
             meanY[i] = (linesMat.get(i, 0)[1] + linesMat.get(i, 0)[3]) / 2;
             if (i > 0) yDif[i - 1] = meanY[i] - meanY[i - 1];
         }
+        for (int i = 0; i < yDif.length; i++) {
+            sumYDif += yDif[i];
+        }
+        meanYDif = sumYDif / yDif.length;
+        linesWidth = 1.0;
+    }
+    
+    private void setSpacePosLines() {
+        spacePosLines = new Mat();
         
     }
     
@@ -114,11 +131,27 @@ public class StaveProcessor {
         Mat linesRoi;
         Point left;
         Point right;
-        //double
+        double dif = 2;
+        int pixNum;
         for (int i = 0; i < linesMat.rows(); i++) {
-            left = new Point(linesMat.get(i, 0)[0], linesMat.get(i, 0)[1]);
-            right = new Point(linesMat.get(i, 0)[2], linesMat.get(i, 0)[3]);
-            
+            left = new Point(linesMat.get(i, 0)[0], linesMat.get(i, 0)[1] - dif);
+            right = new Point(linesMat.get(i, 0)[2], linesMat.get(i, 0)[3] + dif);
+            linesRoi = removedMat.submat(new Rect(left, right));
+            //linesRoi = new Mat(removedMat, new Rect(left, right));
+            //pixNum = 0;
+            TestClass test = new TestClass();
+            test.mat(linesRoi);
+            for (int k = 0; k < linesRoi.cols(); k++) {
+                pixNum = 0;
+                for (int l = 0; l < linesRoi.rows(); l++) {
+                    if (linesRoi.get(l, k)[0] == 255.0) pixNum++;
+                }
+                if (pixNum <= linesWidth) {
+                    for (int l = 0; l < linesRoi.rows(); l++) {
+                        linesRoi.put(l, k, 0.0);
+                    }
+                }
+            }
         }
     }
     
@@ -130,7 +163,9 @@ public class StaveProcessor {
         return linedMat;
     }
     
-    public Mat getOutputMat() {
-        return outputMat;
+    public Mat getRemovedMat() {
+        return removedMat;
     }
+    
+    
 }
