@@ -29,6 +29,7 @@ public class Labeler {
     
     public void labeling() {
         labelNum = Imgproc.connectedComponentsWithStats(inputMat, labeledMat, stats, centroids, 8, CvType.CV_32S);
+        //labelNum = Imgproc.connectedComponentsWithStats(inputMat, labeledMat, stats, centroids, 4, CvType.CV_32S);
         //labelNum = Imgproc.connectedComponents(inputMat, labeledMat, 8, CvType.CV_32S);
         System.out.println("Labeling - " + labelNum + ", " + labeledMat);
     }
@@ -114,7 +115,7 @@ public class Labeler {
             p2 = rects[i].br();
             Imgproc.rectangle(inputMat, p1, p2, color);
             Imgproc.putText(inputMat, label + i, new Point(p1.x + 5, p1.y + 20), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(0, 255, 255), 2);
-            //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_ITALIC, 0.7, new Scalar(0, 255, 255), 2);
+                //Imgproc.putText(detectedMat, label + i, new Point(left + 5, top + 20), Core.FONT_ITALIC, 0.7, new Scalar(0, 255, 255), 2);
         }
     }
     

@@ -40,38 +40,43 @@ public class StaveProcessor {
         linesMat = new Mat();
         linedMat = inputMat.clone();
         removedMat = inputMat.clone();
-            //Imgproc.HoughLines();
-            //Imgproc.HoughLines(inputMat, lines, rho, theta, threshold, srn, stn, minTheta, maxTheta);
-        
-            //Imgproc.HoughLines(inputMat, linesMat, rho, theta, threshold);
-            //Imgproc.HoughLinesP(inputMat, lines, rho, theta, threshold, minLineLength, maxLineGap);
-        
-            //Imgproc.Canny(inputMat, edgesMat, 150,100);
-            //Imgproc.Canny(inputMat, edgesMat, 80, 100);
-            //ImageViewer viewer = new ImageViewer();
-            //viewer.show(edgesMat, "edgesMat");
-            //Imgproc.HoughLinesP(edgesMat, linesMat, 5, Math.PI/180, 200, 30, 5);
-        
-            //Imgproc.HoughLinesP(edgesMat, linesMat, 1, Math.PI / 180 , 50, 100 ,10);
-            //Imgproc.HoughLines(edgesMat, linesMat, 5, Math.PI/180, threshold);
-            //Imgproc.HoughLines(edgesMat, linesMat, rho, theta, threshold, srn, stn, minTheta, maxTheta);
-        //Imgproc.HoughLines(inputMat, linesMat, rho, theta, threshold, srn, stn, minTheta, maxTheta);
-            //Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold);
-    
-        minLineLength = (int)(inputMat.cols() * 0.6);
-        Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold, minLineLength, maxLineGap);
-        //System.out.println("HoughLines - " + inputMat + "\n   by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
-        linesNum = linesMat.rows();
-        System.out.println("HoughLinesP - " + inputMat);
-        System.out.println("    by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", minLineLength:" + minLineLength + ", maxLineGap:" + maxLineGap);
-        test.matInfo(linesMat, "linesMat");
-        //test.matChannel(linesMat, 4);
+        searchStave(inputMat);
         sortStave();
         drawLines();
         test.matChannel(linesMat, 4);
         test.matInfo(linedMat, "linedMat");
         calcWidth();
         removeStave();
+    }
+    
+    private void searchStave(Mat inputMat) {
+        //Imgproc.HoughLines();
+        //Imgproc.HoughLines(inputMat, lines, rho, theta, threshold, srn, stn, minTheta, maxTheta);
+    
+        //Imgproc.HoughLines(inputMat, linesMat, rho, theta, threshold);
+        //Imgproc.HoughLinesP(inputMat, lines, rho, theta, threshold, minLineLength, maxLineGap);
+    
+        //Imgproc.Canny(inputMat, edgesMat, 150,100);
+        //Imgproc.Canny(inputMat, edgesMat, 80, 100);
+        //ImageViewer viewer = new ImageViewer();
+        //viewer.show(edgesMat, "edgesMat");
+        //Imgproc.HoughLinesP(edgesMat, linesMat, 5, Math.PI/180, 200, 30, 5);
+    
+        //Imgproc.HoughLinesP(edgesMat, linesMat, 1, Math.PI / 180 , 50, 100 ,10);
+        //Imgproc.HoughLines(edgesMat, linesMat, 5, Math.PI/180, threshold);
+        //Imgproc.HoughLines(edgesMat, linesMat, rho, theta, threshold, srn, stn, minTheta, maxTheta);
+        //Imgproc.HoughLines(inputMat, linesMat, rho, theta, threshold, srn, stn, minTheta, maxTheta);
+        //Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold);
+        
+        minLineLength = (int)(inputMat.cols() * 0.6);
+        Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold, minLineLength, maxLineGap);
+        //System.out.println("HoughLines - " + inputMat + "\n   by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
+        linesNum = linesMat.rows();
+        System.out.println("HoughLinesP - " + inputMat);
+        System.out.println("    by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", minLineLength:" + minLineLength + ", maxLineGap:" + maxLineGap);
+        TestClass test = new TestClass();
+        test.matInfo(linesMat, "linesMat");
+        //test.matChannel(linesMat, 4);
     }
     
     private void sortStave() {
@@ -94,7 +99,7 @@ public class StaveProcessor {
         System.out.println("Sorted stave");
     }
     
-    private void calcWidth() {
+    private void calcWidth() {  //think again later
         meanY = new double[linesNum];
         double[] yDif = new double[linesNum - 1];
         double sumYDif = 0;
@@ -106,7 +111,13 @@ public class StaveProcessor {
             sumYDif += yDif[i];
         }
         meanYDif = sumYDif / yDif.length;
-        linesWidth = 1.0;
+        System.out.println("meanYDif = " + meanYDif);
+        for (int i = 0; i < linesNum - 1; i++) {
+            if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
+                System.out.println("line: " + (i+1));
+            }
+        }
+        linesWidth = 3.0;
     }
     
     private void setSpacePosLines() {
@@ -131,7 +142,7 @@ public class StaveProcessor {
         Mat linesRoi;
         Point left;
         Point right;
-        double dif = 2;
+        double dif = linesWidth * 2/3;   //2;
         int pixNum;
         for (int i = 0; i < linesMat.rows(); i++) {
             left = new Point(linesMat.get(i, 0)[0], linesMat.get(i, 0)[1] - dif);
@@ -139,8 +150,8 @@ public class StaveProcessor {
             linesRoi = removedMat.submat(new Rect(left, right));
             //linesRoi = new Mat(removedMat, new Rect(left, right));
             //pixNum = 0;
-            TestClass test = new TestClass();
-            test.mat(linesRoi);
+            //TestClass test = new TestClass();
+            //test.mat(linesRoi);
             for (int k = 0; k < linesRoi.cols(); k++) {
                 pixNum = 0;
                 for (int l = 0; l < linesRoi.rows(); l++) {

@@ -18,7 +18,7 @@ public class SymbolsRecognizer {
         
         //labeler.coloringLabels();
         //coloredMat = labeler.getColoredMat();
-        labeler.sortLabels();
+        //labeler.sortLabels();
         labeler.detectLabels(labeler.getInputMat());
         detectedMat = labeler.getDetectedMat();
         roiMat = labeler.getRoiMat();
