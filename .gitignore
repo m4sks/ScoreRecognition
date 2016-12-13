@@ -1,3 +1,5 @@
 bin/
 .idea/
-scoreRecognition.iml
+/.classpath
+/.project
+/scoreRecognition.iml
