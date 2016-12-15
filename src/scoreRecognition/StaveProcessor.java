@@ -3,6 +3,7 @@ package scoreRecognition;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import java.lang.Math;
+//import java.util.Random;
 
 /**
  * Created by ev50063 on 2016/11/08.
@@ -27,12 +28,14 @@ public class StaveProcessor {
     private Mat removedMat;
     
     private int linesNum;
+    private double[] yDif;
     private double[] meanY;
     private double meanYDif;
     private double lineSpace;
     private double linesWidth;
     //private double staveSpace;
     private Mat spacePosLines;
+    private int[] lineNumber;
     
     StaveProcessor(Mat inputMat) {
         TestClass test = new TestClass();
@@ -46,6 +49,8 @@ public class StaveProcessor {
         test.matChannel(linesMat, 4);
         test.matInfo(linedMat, "linedMat");
         calcWidth();
+        sortYDif();
+        clusteringStave();
         removeStave();
     }
     
@@ -74,8 +79,8 @@ public class StaveProcessor {
         linesNum = linesMat.rows();
         System.out.println("HoughLinesP - " + inputMat);
         System.out.println("    by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", minLineLength:" + minLineLength + ", maxLineGap:" + maxLineGap);
-        TestClass test = new TestClass();
-        test.matInfo(linesMat, "linesMat");
+        //TestClass test = new TestClass();
+        //test.matInfo(linesMat, "linesMat");
         //test.matChannel(linesMat, 4);
     }
     
@@ -101,7 +106,7 @@ public class StaveProcessor {
     
     private void calcWidth() {  //think again later
         meanY = new double[linesNum];
-        double[] yDif = new double[linesNum - 1];
+        yDif = new double[linesNum - 1];
         double sumYDif = 0;
         for (int i = 0; i < linesNum; i++) {
             meanY[i] = (linesMat.get(i, 0)[1] + linesMat.get(i, 0)[3]) / 2;
@@ -118,6 +123,99 @@ public class StaveProcessor {
             }
         }
         linesWidth = 3.0;
+    }
+    
+    private void sortYDif() {
+        double yDifTemp;
+        lineNumber = new int[yDif.length];
+        int lineNumberTemp;
+        
+        for (int i = 0; i < yDif.length; i++) {
+            lineNumber[i] = i;
+        }
+        for (int i = 1; i < yDif.length - 1; i++) {
+            for (int j = 0; j < yDif.length - i; j++) {
+                if (yDif[j] > yDif[j + 1]) {
+                    yDifTemp = yDif[j];
+                    yDif[j] = yDif[j + 1];
+                    yDif[j + 1] = yDifTemp;
+                    lineNumberTemp = lineNumber[j];
+                    lineNumber[j] = lineNumber[j + 1];
+                    lineNumber[j + 1] = lineNumberTemp;
+                }
+            }
+        }
+    }
+    
+    private void clusteringStave() {
+        int[] cluster3 = new int[yDif.length];
+        cluster3 = kmeans(3);
+        /*for (int i = 0; i < yDif.length; i++) {
+            cluster3[i] = kmeans(3)[i];
+        }*/
+        
+        for (int i = 0; i < yDif.length; i++) {
+            //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
+            System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
+        }
+    }
+    
+    private int[] kmeans(int centNum) {  //k-means for yDif[]
+        double[] centroid = new double[centNum];
+        int[] cluster = new int[yDif.length];
+        int[] clusterNum = new int[centNum];
+        double[][] clusterDist = new double[yDif.length][centNum];
+        double[] clusterDifSum = new double[centNum];
+        
+        boolean done = false;
+        
+        //Random rand = new Random();
+        for (int i = 0; i < yDif.length; i++) {
+            if (i == 0) cluster[i] = 0;
+            else if (i == cluster.length - 1) cluster[i] = centNum - 1;
+            for (int j = 1; j < centNum - 1; j++) {
+                if (i < j * (yDif.length - 2) / centNum) {
+                    cluster[i] = j;
+                }else cluster[i] = centNum - 1;
+                //if (i == 0) meanDistTemp[j] = 0;
+            }
+        }
+        while (!done) {
+            //initialize
+            for (int i = 0; i < centNum; i++) {
+                clusterNum[i] = 0;
+                clusterDifSum[i] = 0;
+                centroid[i] = 0;
+            }
+            
+            //calculate
+            for (int i = 0; i < centNum; i++) {
+                for (int j = 0; j < yDif.length; j++) {
+                    if (cluster[j] == i) clusterNum[i]++;
+                }
+                for (int j = 0; j < yDif.length; j++) {
+                    if (cluster[j] == i) clusterDifSum[i] += yDif[j];
+                }
+                centroid[i] = clusterDifSum[i] / clusterNum[i];
+                for (int j = 0; j < yDif.length; j++) {
+                    clusterDist[j][i] = (centroid[i] - yDif[j]) * (centroid[i] - yDif[j]);
+                }
+            }
+            
+            //update
+            done = true;
+            for (int i = 0; i < yDif.length; i++) {
+                for (int j = 0; j < cluster[i]; j++) {
+                    if (cluster[i] != j) {
+                        if (clusterDist[i][cluster[i]] > clusterDist[i][j]) {
+                            cluster[i] = cluster[j];
+                            done = false;
+                        }
+                    }
+                }
+            }
+        }
+        return cluster;
     }
     
     private void setSpacePosLines() {
