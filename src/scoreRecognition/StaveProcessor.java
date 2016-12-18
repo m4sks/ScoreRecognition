@@ -36,6 +36,7 @@ public class StaveProcessor {
     //private double staveSpace;
     private Mat spacePosLines;
     private int[] lineNumber;
+    int[] cluster;
     
     StaveProcessor(Mat inputMat) {
         TestClass test = new TestClass();
@@ -49,7 +50,6 @@ public class StaveProcessor {
         test.matChannel(linesMat, 4);
         test.matInfo(linedMat, "linedMat");
         calcWidth();
-        sortYDif();
         clusteringStave();
         removeStave();
     }
@@ -116,23 +116,40 @@ public class StaveProcessor {
             sumYDif += yDif[i];
         }
         meanYDif = sumYDif / yDif.length;
-        System.out.println("meanYDif = " + meanYDif);
+        /*System.out.println("meanYDif = " + meanYDif);
         for (int i = 0; i < linesNum - 1; i++) {
             if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
                 System.out.println("line: " + (i+1));
             }
-        }
+        }*/
         linesWidth = 3.0;
     }
     
-    private void sortYDif() {
-        double yDifTemp;
+    private void clusteringStave() {
+        setLineNumber();
+        sortbyYDif();
+        //int[] cluster3 = new int[yDif.length];
+        int[] cluster3 = kmeans(3);
+        /*for (int i = 0; i < yDif.length; i++) {
+            cluster3[i] = kmeans(3)[i];
+        }*/
+        sortbyLineNumber();
+        for (int i = 0; i < yDif.length; i++) {
+            //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
+            System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
+        }
+    }
+    
+    private void setLineNumber() {
         lineNumber = new int[yDif.length];
-        int lineNumberTemp;
-        
         for (int i = 0; i < yDif.length; i++) {
             lineNumber[i] = i;
         }
+    }
+    
+    private void sortbyYDif() {
+        double yDifTemp;
+        int lineNumberTemp;
         for (int i = 1; i < yDif.length - 1; i++) {
             for (int j = 0; j < yDif.length - i; j++) {
                 if (yDif[j] > yDif[j + 1]) {
@@ -147,22 +164,30 @@ public class StaveProcessor {
         }
     }
     
-    private void clusteringStave() {
-        int[] cluster3 = new int[yDif.length];
-        cluster3 = kmeans(3);
-        /*for (int i = 0; i < yDif.length; i++) {
-            cluster3[i] = kmeans(3)[i];
-        }*/
-        
-        for (int i = 0; i < yDif.length; i++) {
-            //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
-            System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
+    private void sortbyLineNumber() {
+        double yDifTemp;
+        int lineNumberTemp;
+        int clusterTemp;
+        for (int i = 1; i < yDif.length - 1; i++) {
+            for (int j = 0; j < yDif.length - i; j++) {
+                if (lineNumber[j] > lineNumber[j + 1]) {
+                    yDifTemp = yDif[j];
+                    yDif[j] = yDif[j + 1];
+                    yDif[j + 1] = yDifTemp;
+                    lineNumberTemp = lineNumber[j];
+                    lineNumber[j] = lineNumber[j + 1];
+                    lineNumber[j + 1] = lineNumberTemp;
+                    clusterTemp = cluster[j];
+                    cluster[j] = cluster[j + 1];
+                    cluster[j + 1] = clusterTemp;
+                }
+            }
         }
     }
     
     private int[] kmeans(int centNum) {  //k-means for yDif[]
         double[] centroid = new double[centNum];
-        int[] cluster = new int[yDif.length];
+        cluster = new int[yDif.length];
         int[] clusterNum = new int[centNum];
         double[][] clusterDist = new double[yDif.length][centNum];
         double[] clusterDifSum = new double[centNum];
@@ -246,10 +271,6 @@ public class StaveProcessor {
             left = new Point(linesMat.get(i, 0)[0], linesMat.get(i, 0)[1] - dif);
             right = new Point(linesMat.get(i, 0)[2], linesMat.get(i, 0)[3] + dif);
             linesRoi = removedMat.submat(new Rect(left, right));
-            //linesRoi = new Mat(removedMat, new Rect(left, right));
-            //pixNum = 0;
-            //TestClass test = new TestClass();
-            //test.mat(linesRoi);
             for (int k = 0; k < linesRoi.cols(); k++) {
                 pixNum = 0;
                 for (int l = 0; l < linesRoi.rows(); l++) {
