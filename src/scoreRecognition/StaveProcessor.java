@@ -39,7 +39,7 @@ public class StaveProcessor {
     int[] cluster;
     
     StaveProcessor(Mat inputMat) {
-        TestClass test = new TestClass();
+        //TestClass test = new TestClass();
         //edgesMat = new Mat();
         linesMat = new Mat();
         linedMat = inputMat.clone();
@@ -47,10 +47,11 @@ public class StaveProcessor {
         searchStave(inputMat);
         sortStave();
         drawLines();
-        test.matChannel(linesMat, 4);
-        test.matInfo(linedMat, "linedMat");
-        calcWidth();
+        //test.matChannel(linesMat, 4);
+        //test.matInfo(linedMat, "linedMat");
+        setYDif();
         clusteringStave();
+        calcWidth();
         removeStave();
     }
     
@@ -104,7 +105,7 @@ public class StaveProcessor {
         System.out.println("Sorted stave");
     }
     
-    private void calcWidth() {  //think again later
+    private void setYDif() {
         meanY = new double[linesNum];
         yDif = new double[linesNum - 1];
         double sumYDif = 0;
@@ -116,13 +117,6 @@ public class StaveProcessor {
             sumYDif += yDif[i];
         }
         meanYDif = sumYDif / yDif.length;
-        /*System.out.println("meanYDif = " + meanYDif);
-        for (int i = 0; i < linesNum - 1; i++) {
-            if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
-                System.out.println("line: " + (i+1));
-            }
-        }*/
-        linesWidth = 3.0;
     }
     
     private void clusteringStave() {
@@ -241,6 +235,16 @@ public class StaveProcessor {
             }
         }
         return cluster;
+    }
+    
+    private void calcWidth() {
+        /*System.out.println("meanYDif = " + meanYDif);
+        for (int i = 0; i < linesNum - 1; i++) {
+            if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
+                System.out.println("line: " + (i+1));
+            }
+        }*/
+        linesWidth = 3.0;
     }
     
     private void setSpacePosLines() {
