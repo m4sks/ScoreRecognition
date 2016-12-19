@@ -45,6 +45,10 @@ public class NotesRecognizer {
         
     }
     
+    private void detectHead() {
+        
+    }
+    
     private boolean isWhiteNote(Mat inputRoiMat) {
         TestClass test = new TestClass();
         boolean output = true;
@@ -78,9 +82,9 @@ public class NotesRecognizer {
             Point maxp = maxr.maxLoc;
             Point pt2 = new Point(maxp.x + templateMat.width(), maxp.y + templateMat.height());
             Imgproc.rectangle(inputRoiMat, maxp, pt2, new Scalar(0, 0, 255));
-            //ImageViewer viewer = new ImageViewer();
-            //viewer.show(templateMat);
-            //Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
+            ImageViewer viewer = new ImageViewer();
+            viewer.show(templateMat);
+            Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
         }
         return output;
     }
