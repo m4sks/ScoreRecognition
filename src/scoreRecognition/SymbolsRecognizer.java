@@ -22,7 +22,7 @@ public class SymbolsRecognizer {
         labeler.detectLabels(labeler.getInputMat());
         detectedMat = labeler.getDetectedMat();
         roiMat = labeler.getRoiMat();
-        notesRecognizer.recognizeNotes(roiMat[1]);
+        //notesRecognizer.recognizeNotes(roiMat[1]);
         /*for (int i = 1; i < roiMat.length; i++) {
             notesRecognizer.recognizeNotes(roiMat[i]);
         }*/

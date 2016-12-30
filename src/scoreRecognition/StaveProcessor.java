@@ -33,17 +33,20 @@ public class StaveProcessor {
     private double meanYDif;
     private double lineSpace;
     private double linesWidth;
-    //private double staveSpace;
-    private Mat spacePosLines;
+    private double staveSpace;
+    //private Mat spacePosLines;
     private int[] lineNumber;
     int[] cluster;
     
-    StaveProcessor(Mat inputMat) {
+    private boolean oneStaff;
+    
+    StaveProcessor(Mat inputMat, boolean isOnAStaff) {
         //TestClass test = new TestClass();
         //edgesMat = new Mat();
         linesMat = new Mat();
         linedMat = inputMat.clone();
         removedMat = inputMat.clone();
+        oneStaff = isOnAStaff;
         searchStave(inputMat);
         sortStave();
         drawLines();
@@ -51,6 +54,7 @@ public class StaveProcessor {
         //test.matInfo(linedMat, "linedMat");
         setYDif();
         clusteringStave();
+        calcSpace();
         calcWidth();
         removeStave();
     }
@@ -128,10 +132,10 @@ public class StaveProcessor {
             cluster3[i] = kmeans(3)[i];
         }*/
         sortbyLineNumber();
-        for (int i = 0; i < yDif.length; i++) {
+        /*for (int i = 0; i < yDif.length; i++) {
             //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
             System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
-        }
+        }*/
     }
     
     private void setLineNumber() {
@@ -237,18 +241,57 @@ public class StaveProcessor {
         return cluster;
     }
     
+    private void calcSpace() {
+        double[] clusterSum = new double[3];
+        double[] clusterMean = new double[3];
+        int[] clusterNum = new int[3];
+        for (int i = 0; i < 3; i++) {
+            clusterSum[i] = 0;
+            clusterMean[i] = 0;
+            clusterNum[i] = 0;
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < yDif.length; j++) {
+                if (cluster[j] == i) {
+                    clusterSum[i] += yDif[j];
+                    clusterNum[i]++;
+                }
+            }
+            if (clusterNum[i] == 0) {
+                clusterMean[i] = 0;
+            }else {
+                clusterMean[i] = clusterSum[i] / clusterNum[i];
+            }
+            
+            System.out.println("cluster" + i + ": " + clusterMean[i]);
+        }
+        
+        if (oneStaff) {
+            if (clusterMean[0] == 0) {
+                lineSpace = clusterMean[2];
+            }else {
+                System.out.println("Warning: couldn't calculate lineSpace");
+            }
+        }else {
+            lineSpace = clusterMean[1];
+            staveSpace = clusterMean[2];
+        }
+        System.out.println("lineSpace = " + lineSpace);
+        if (!oneStaff) System.out.println("staveSpace = " + staveSpace);
+            
+    }
+    
     private void calcWidth() {
+        linesWidth = 1.5;
         /*System.out.println("meanYDif = " + meanYDif);
         for (int i = 0; i < linesNum - 1; i++) {
             if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
                 System.out.println("line: " + (i+1));
             }
         }*/
-        linesWidth = 3.0;
-    }
-    
-    private void setSpacePosLines() {
-        spacePosLines = new Mat();
+        //linesWidth = 3.0;
+        
         
     }
     
@@ -300,6 +343,4 @@ public class StaveProcessor {
     public Mat getRemovedMat() {
         return removedMat;
     }
-    
-    
 }
