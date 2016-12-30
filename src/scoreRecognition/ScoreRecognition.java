@@ -12,10 +12,10 @@ public class ScoreRecognition {
         
         //Load image
         //ImageLoader loader = new ImageLoader("./pictures/quaterNote01.jpg");
-        //ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
+        ImageLoader loader = new ImageLoader("./pictures/dotted-notes.png");
         //ImageLoader loader = new ImageLoader("./pictures/rest.png");
         //ImageLoader loader = new ImageLoader("./pictures/dotted-rest.png");
-        ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
+        //ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
         //ImageLoader loader = new ImageLoader("./pictures/linesTest.png");
         //ImageLoader loader = new ImageLoader("./pictures/five-staff-rule-1.png");
         

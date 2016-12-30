@@ -48,6 +48,10 @@ public class StaveProcessor {
         removedMat = inputMat.clone();
         oneStaff = isOnAStaff;
         searchStave(inputMat);
+        if (linesNum == 0) {
+            System.out.println("Error: Can't search any staff");
+            System.exit(1);
+        }
         sortStave();
         drawLines();
         //test.matChannel(linesMat, 4);
@@ -264,7 +268,7 @@ public class StaveProcessor {
                 clusterMean[i] = clusterSum[i] / clusterNum[i];
             }
             
-            System.out.println("cluster" + i + ": " + clusterMean[i]);
+            System.out.println("cluster" + i + ": " + clusterMean[i] + ", x" + clusterNum[i]);
         }
         
         if (oneStaff) {
@@ -291,7 +295,6 @@ public class StaveProcessor {
             }
         }*/
         //linesWidth = 3.0;
-        
         
     }
     
