@@ -36,7 +36,9 @@ public class StaveProcessor {
     private double staveSpace;
     //private Mat spacePosLines;
     private int[] lineNumber;
-    int[] cluster;
+    private int[] cluster;
+    
+    private int maxDoubleStave;
     
     private boolean oneStaff;
     
@@ -59,6 +61,7 @@ public class StaveProcessor {
         setYDif();
         clusteringStave();
         calcSpace();
+        sortbyLineNumber();
         calcWidth();
         removeStave();
     }
@@ -110,7 +113,7 @@ public class StaveProcessor {
                 }
             }
         }
-        System.out.println("Sorted stave");
+        System.out.println("Sorted stave by y position");
     }
     
     private void setYDif() {
@@ -136,10 +139,10 @@ public class StaveProcessor {
             cluster3[i] = kmeans(3)[i];
         }*/
         sortbyLineNumber();
-        /*for (int i = 0; i < yDif.length; i++) {
+        for (int i = 0; i < yDif.length; i++) {
             //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
             System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
-        }*/
+        }
     }
     
     private void setLineNumber() {
@@ -288,14 +291,47 @@ public class StaveProcessor {
     
     private void calcWidth() {
         linesWidth = 1.5;
-        /*System.out.println("meanYDif = " + meanYDif);
+        maxDoubleStave = 0;
+        int doubleStave = 0;
+        System.out.println("meanYDif = " + meanYDif);
         for (int i = 0; i < linesNum - 1; i++) {
-            if (linesMat.get(i + 1, 0)[1] - linesMat.get(i, 0)[1] < meanYDif) {
-                System.out.println("line: " + (i+1));
-            }
-        }*/
-        //linesWidth = 3.0;
+            System.out.println("line: " + i + ", cluster: " + cluster[i]);
+        }
         
+        if (oneStaff) {
+            for (int i = 0; i < linesNum - 1; i++) {
+                if (cluster[i] == 1) {
+                    doubleStave++;
+                }else if (cluster[i] == 2) {
+                    if (maxDoubleStave < doubleStave) {
+                        maxDoubleStave = doubleStave;
+                    }
+                    doubleStave = 0;
+                }else {
+                    doubleStave = 0;
+                }
+            }
+        }else {
+            for (int i = 0; i < linesNum - 1; i++) {
+                if (cluster[i] == 0) {
+                    doubleStave++;
+                }else if (cluster[i] == 1) {
+                    if (maxDoubleStave < doubleStave) {
+                        maxDoubleStave = doubleStave;
+                    }
+                    doubleStave = 0;
+                }else {
+                    if (maxDoubleStave < doubleStave) {
+                        maxDoubleStave = doubleStave;
+                    }
+                    doubleStave = 0;
+                }
+            }
+        }
+        
+        
+        linesWidth += (maxDoubleStave * 0.8);
+        System.out.println("maxDoubleStave = " + maxDoubleStave + ", linesWidth = " + linesWidth);
     }
     
     private void drawLines() {
