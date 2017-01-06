@@ -28,13 +28,13 @@ public class ScoreRecognition {
         
         //image recognition
         // - staves recognition and processing
-        StaveProcessor staveProcessor = new StaveProcessor(processor.getInvertedMat(), true);
+        /*StaveProcessor staveProcessor = new StaveProcessor(processor.getInvertedMat(), true);
         viewer.show(staveProcessor.getLinedMat());
         viewer.show(staveProcessor.getRemovedMat());
-        
+        */
         // - labeling and labeled symbol recognition
             //SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
-        SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(staveProcessor.getRemovedMat());
+        SymbolsRecognizer symbolsRecognizer = new SymbolsRecognizer(processor.getInvertedMat());
         
         /*for (int i = 0; i < symbolsRecognizer.getLabeledMat().rows(); i++) {
             for (int j = 0; j < symbolsRecognizer.getLabeledMat().cols(); j++) {
@@ -46,7 +46,7 @@ public class ScoreRecognition {
         //viewer.show(loader.getInputMat());
         //viewer.show(processor.getInvertedMat());
         viewer.show(symbolsRecognizer.getDetectedMat());
-        //viewer.show(symbolsRecognizer.getRoiMat()[1]);
+        viewer.show(symbolsRecognizer.getRoiMat()[3]);
         /*String labelNumber = "";
         for (int i = 1; i < symbolsRecognizer.getRoiMat().length; i++) {
             viewer.show(symbolsRecognizer.getRoiMat()[i], labelNumber + i);

@@ -7,13 +7,22 @@ import org.opencv.core.Mat;
  */
 public class SymbolsRecognizer {
     //private Mat coloredMat;
+    private Mat staveRemovedMat;
     private Mat detectedMat;
     private Mat[] roiMat;
     
     SymbolsRecognizer(Mat invertedMat) {
-        Labeler labeler = new Labeler(invertedMat);
+        ImageViewer viewer = new ImageViewer();
+        
+        StaveProcessor staveProcessor = new StaveProcessor(invertedMat, true);
+        viewer.show(staveProcessor.getLinedMat());
+        
+        staveRemovedMat = staveProcessor.getRemovedMat();
+        viewer.show(staveRemovedMat);
+        
+        Labeler labeler = new Labeler(staveRemovedMat);
         SpecificSymbolsRecognizer specificsRecognition = new SpecificSymbolsRecognizer();
-        NotesRecognizer notesRecognizer = new NotesRecognizer();
+        NotesRecognizer notesRecognizer = new NotesRecognizer(staveProcessor.getLineSpace());
         AbstractSymbolsRecognizer abstractsRecognition = new AbstractSymbolsRecognizer();
         
         //labeler.coloringLabels();
@@ -22,7 +31,7 @@ public class SymbolsRecognizer {
         labeler.detectLabels(labeler.getInputMat());
         detectedMat = labeler.getDetectedMat();
         roiMat = labeler.getRoiMat();
-        //notesRecognizer.recognizeNotes(roiMat[1]);
+        notesRecognizer.recognizeNotes(roiMat[3]);
         /*for (int i = 1; i < roiMat.length; i++) {
             notesRecognizer.recognizeNotes(roiMat[i]);
         }*/

@@ -41,8 +41,10 @@ public class NotesRecognizer {
     private Mat whiteResultMat;
     private Mat blackResultMat;
     
-    NotesRecognizer() {
-        
+    private double lineSpace;
+    
+    NotesRecognizer(double lineSpace) {
+        this.lineSpace = lineSpace;
     }
     
     private boolean isOneNote(Mat roiMat) {
@@ -50,22 +52,33 @@ public class NotesRecognizer {
         return output;
     }
     
-    private Mat detectHead(Mat roiMat) {
-        Mat detectHeadMat = new Mat();
-        return detectHeadMat;
+    private boolean detectHead(Mat roiMat) {
+        boolean output = true;
+        
+        
+        return output;
     }
     
     private boolean isWhiteNote(Mat inputRoiMat) {
         //TestClass test = new TestClass();
         boolean output = true;
-        /*whiteResultMat = new Mat();
+        whiteResultMat = new Mat();
         //ImageLoader loader = new ImageLoader("./pictures/wholeNote.jpg");
         ImageLoader loader = new ImageLoader("./pictures/wholeNote2.png");
         //Mat templateMat = new Mat();
         //test.matInfo(loader.getInputMat());
-        Mat loaderedMat = loader.getInputMat();
+        Mat loadedMat = loader.getInputMat();
         Mat resizedMat = new Mat();
-        Imgproc.resize(loaderedMat, resizedMat, new Size(loaderedMat.size().width * 0.25, loaderedMat.size().height * 0.25));
+        
+        ImageViewer viewer = new ImageViewer();
+        viewer.show(inputRoiMat);
+        System.out.println(lineSpace + ", " + inputRoiMat.rows() + ", " +  inputRoiMat.cols());
+        if (lineSpace < inputRoiMat.rows() || lineSpace < inputRoiMat.cols()) {
+            output = false;
+            return output;
+        }
+        
+        Imgproc.resize(loadedMat, resizedMat, new Size(lineSpace, lineSpace));//loadedMat.size().width * 0.1, loadedMat.size().height * 0.1));
         ImageProcessor processor = new ImageProcessor();
         processor.grayScale(resizedMat);
         processor.binarize(processor.getGrayscaledMat());
@@ -88,10 +101,10 @@ public class NotesRecognizer {
             Point maxp = maxr.maxLoc;
             Point pt2 = new Point(maxp.x + templateMat.width(), maxp.y + templateMat.height());
             Imgproc.rectangle(inputRoiMat, maxp, pt2, new Scalar(0, 0, 255));
-            ImageViewer viewer = new ImageViewer();
-            viewer.show(templateMat);
+            ImageViewer viewer2 = new ImageViewer();
+            viewer2.show(templateMat);
             Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
-        }*/
+        }
         return output;
     }
     
@@ -105,9 +118,9 @@ public class NotesRecognizer {
         if (roiMat.empty()) {
             return output;
         }
-        if (detectHead(roiMat).empty()) {
-            return output;
-        }
+        /*if (detectHead(roiMat).empty()) {
+        //    return output;
+        }*/
         if (isWhiteNote(roiMat)) {
             output = "White Note";
         }else if (isBlackNote(roiMat)) {

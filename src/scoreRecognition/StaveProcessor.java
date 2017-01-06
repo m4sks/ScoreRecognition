@@ -293,10 +293,10 @@ public class StaveProcessor {
         linesWidth = 1.5;
         maxDoubleStave = 0;
         int doubleStave = 0;
-        System.out.println("meanYDif = " + meanYDif);
-        for (int i = 0; i < linesNum - 1; i++) {
+        //System.out.println("meanYDif = " + meanYDif);
+        /*for (int i = 0; i < linesNum - 1; i++) {
             System.out.println("line: " + i + ", cluster: " + cluster[i]);
-        }
+        }*/
         
         if (oneStaff) {
             for (int i = 0; i < linesNum - 1; i++) {
@@ -381,5 +381,9 @@ public class StaveProcessor {
     
     public Mat getRemovedMat() {
         return removedMat;
+    }
+    
+    public double getLineSpace() {
+        return lineSpace;
     }
 }
