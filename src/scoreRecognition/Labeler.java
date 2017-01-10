@@ -189,4 +189,8 @@ public class Labeler {
     public Mat[] getRoiMat() {
         return roiMat;
     }
+    
+    public Rect[] getROIRects() {
+        return rects;
+    }
 }

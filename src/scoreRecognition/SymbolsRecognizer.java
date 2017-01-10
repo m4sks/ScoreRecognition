@@ -1,6 +1,7 @@
 package scoreRecognition;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 
 /**
  * Created by ev50063 on 2016/11/11.
@@ -10,6 +11,7 @@ public class SymbolsRecognizer {
     private Mat staveRemovedMat;
     private Mat detectedMat;
     private Mat[] roiMat;
+    private Rect rects[];
     
     SymbolsRecognizer(Mat invertedMat) {
         ImageViewer viewer = new ImageViewer();
@@ -17,7 +19,7 @@ public class SymbolsRecognizer {
         StaveProcessor staveProcessor = new StaveProcessor(invertedMat, true);
         viewer.show(staveProcessor.getLinedMat());
         
-        staveRemovedMat = staveProcessor.getRemovedMat();
+        this.staveRemovedMat = staveProcessor.getRemovedMat();
         viewer.show(staveRemovedMat);
         
         Labeler labeler = new Labeler(staveRemovedMat);
@@ -29,8 +31,9 @@ public class SymbolsRecognizer {
         //coloredMat = labeler.getColoredMat();
         //labeler.sortLabels();
         labeler.detectLabels(labeler.getInputMat());
-        detectedMat = labeler.getDetectedMat();
-        roiMat = labeler.getRoiMat();
+        this.detectedMat = labeler.getDetectedMat();
+        this.roiMat = labeler.getRoiMat();
+        this.rects = labeler.getROIRects();
         notesRecognizer.recognizeNotes(roiMat[3]);
         /*for (int i = 1; i < roiMat.length; i++) {
             notesRecognizer.recognizeNotes(roiMat[i]);

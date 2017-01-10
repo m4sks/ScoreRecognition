@@ -47,37 +47,27 @@ public class NotesRecognizer {
         this.lineSpace = lineSpace;
     }
     
-    private boolean isOneNote(Mat roiMat) {
-        boolean output = true;
-        return output;
-    }
     
-    private boolean detectHead(Mat roiMat) {
+    private boolean detectHead(Mat inputRoiMat) {
         boolean output = true;
-        
-        
-        return output;
-    }
     
-    private boolean isWhiteNote(Mat inputRoiMat) {
-        //TestClass test = new TestClass();
-        boolean output = true;
-        whiteResultMat = new Mat();
+        if (lineSpace < inputRoiMat.rows() || lineSpace < inputRoiMat.cols()) {
+            output = false;
+            return output;
+        }
+        
+        /*
         //ImageLoader loader = new ImageLoader("./pictures/wholeNote.jpg");
         ImageLoader loader = new ImageLoader("./pictures/wholeNote2.png");
         //Mat templateMat = new Mat();
         //test.matInfo(loader.getInputMat());
         Mat loadedMat = loader.getInputMat();
         Mat resizedMat = new Mat();
-        
+    
         ImageViewer viewer = new ImageViewer();
         viewer.show(inputRoiMat);
         System.out.println(lineSpace + ", " + inputRoiMat.rows() + ", " +  inputRoiMat.cols());
-        if (lineSpace < inputRoiMat.rows() || lineSpace < inputRoiMat.cols()) {
-            output = false;
-            return output;
-        }
-        
+    
         Imgproc.resize(loadedMat, resizedMat, new Size(lineSpace, lineSpace));//loadedMat.size().width * 0.1, loadedMat.size().height * 0.1));
         ImageProcessor processor = new ImageProcessor();
         processor.grayScale(resizedMat);
@@ -85,26 +75,28 @@ public class NotesRecognizer {
         processor.invert(processor.getBinarizedMat());
         Mat templateMat = processor.getInvertedMat().clone();
         
-        //test.matInfo(inputRoiMat);
-        //test.matInfo(templateMat);
         try {
             //Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCOEFF_NORMED);
             Imgproc.matchTemplate(inputRoiMat, templateMat, whiteResultMat, Imgproc.TM_CCORR_NORMED);
         }catch (CvException e) {
             throw new CvException("Failed to matchTemplate. Exception thrown: " + e);
         }
-        if (whiteResultMat == new Mat()) {
-            output = false;
-        }else {
-            Imgproc.cvtColor(inputRoiMat, inputRoiMat, Imgproc.COLOR_GRAY2BGR);
-            Core.MinMaxLocResult maxr = Core.minMaxLoc(whiteResultMat);
-            Point maxp = maxr.maxLoc;
-            Point pt2 = new Point(maxp.x + templateMat.width(), maxp.y + templateMat.height());
-            Imgproc.rectangle(inputRoiMat, maxp, pt2, new Scalar(0, 0, 255));
-            ImageViewer viewer2 = new ImageViewer();
-            viewer2.show(templateMat);
-            Imgproc.putText(inputRoiMat, "White Note", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(255, 255, 255), 2);
-        }
+        
+        Imgproc.cvtColor(inputRoiMat, inputRoiMat, Imgproc.COLOR_GRAY2BGR);
+        Core.MinMaxLocResult maxr = Core.minMaxLoc(whiteResultMat);
+        Point maxp = maxr.maxLoc;
+        Point pt2 = new Point(maxp.x + templateMat.width(), maxp.y + templateMat.height());
+        Imgproc.rectangle(inputRoiMat, maxp, pt2, new Scalar(0, 0, 255));
+        ImageViewer viewer2 = new ImageViewer();
+        viewer2.show(templateMat);
+        Imgproc.putText(inputRoiMat, "Head", new Point(maxp.x, maxp.y + templateMat.height() + 20.0), Core.FONT_HERSHEY_COMPLEX, 0.7, new Scalar(0, 0, 255), 2);
+        */
+        
+        return output;
+    }
+    
+    private boolean isOneNote(Mat roiMat) {
+        boolean output = true;
         return output;
     }
     
@@ -115,17 +107,30 @@ public class NotesRecognizer {
     
     public String recognizeNotes(Mat roiMat) {
         String output = "";
-        if (roiMat.empty()) {
+        if (detectHead(roiMat)) {
+            if (isOneNote(roiMat)) {
+                if (isBlackNote(roiMat)) {
+                    
+                }else {
+                    
+                }
+            }else {
+                
+            }
+        }else {
+            
+        }
+        /*if (roiMat.empty()) {
             return output;
         }
-        /*if (detectHead(roiMat).empty()) {
+        //if (detectHead(roiMat).empty()) {
         //    return output;
-        }*/
+        //}
         if (isWhiteNote(roiMat)) {
             output = "White Note";
         }else if (isBlackNote(roiMat)) {
             output = "BlackNote";
-        }
+        }*/
         return output;
     }
     

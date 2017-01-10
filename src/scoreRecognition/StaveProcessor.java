@@ -42,18 +42,24 @@ public class StaveProcessor {
     
     private boolean oneStaff;
     
+    private int staffCluster;
+    
+    private int staffNum;
+    private double[] stavePos;
+    private double staveWidth;
+    
     StaveProcessor(Mat inputMat, boolean isOnAStaff) {
         //TestClass test = new TestClass();
-        //edgesMat = new Mat();
         linesMat = new Mat();
         linedMat = inputMat.clone();
         removedMat = inputMat.clone();
         oneStaff = isOnAStaff;
         searchStave(inputMat);
-        if (linesNum == 0) {
+        if (linesNum < 5) {
             System.out.println("Error: Can't search any staff");
             System.exit(1);
         }
+        setStaffCluster();
         sortStave();
         drawLines();
         //test.matChannel(linesMat, 4);
@@ -64,6 +70,9 @@ public class StaveProcessor {
         sortbyLineNumber();
         calcWidth();
         removeStave();
+        setStaffNum();
+        setStavePos();
+        setStaveWidth();
     }
     
     private void searchStave(Mat inputMat) {
@@ -88,7 +97,8 @@ public class StaveProcessor {
         minLineLength = (int)(inputMat.cols() * 0.6);
         Imgproc.HoughLinesP(inputMat, linesMat, rho, theta, threshold, minLineLength, maxLineGap);
         //System.out.println("HoughLines - " + inputMat + "\n   by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", srn:" + srn + ", stn:" + stn + ", minTheta:" + minTheta + ", maxTheta:" + maxTheta);
-        linesNum = linesMat.rows();
+        linesNum = linesMat.rows() - 1;
+        System.out.println("linesNum: " + linesNum);
         System.out.println("HoughLinesP - " + inputMat);
         System.out.println("    by rho:" + rho + ", theta:" + theta + ", threshold:" + threshold + ", minLineLength:" + minLineLength + ", maxLineGap:" + maxLineGap);
         //TestClass test = new TestClass();
@@ -134,14 +144,14 @@ public class StaveProcessor {
         setLineNumber();
         sortbyYDif();
         //int[] cluster3 = new int[yDif.length];
-        int[] cluster3 = kmeans(3);
+        cluster = kmeans(3);
         /*for (int i = 0; i < yDif.length; i++) {
             cluster3[i] = kmeans(3)[i];
         }*/
         sortbyLineNumber();
         for (int i = 0; i < yDif.length; i++) {
             //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
-            System.out.println("cluster: " + cluster3[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
+            System.out.println("cluster: " + cluster[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
         }
     }
     
@@ -199,7 +209,6 @@ public class StaveProcessor {
         
         boolean done = false;
         
-        //Random rand = new Random();
         for (int i = 0; i < yDif.length; i++) {
             if (i == 0) cluster[i] = 0;
             else if (i == cluster.length - 1) cluster[i] = centNum - 1;
@@ -351,7 +360,7 @@ public class StaveProcessor {
         Mat linesRoi;
         Point left;
         Point right;
-        double dif = linesWidth * 2/3;   //2;
+        double dif = linesWidth * 2/3;
         int pixNum;
         for (int i = 0; i < linesMat.rows(); i++) {
             left = new Point(linesMat.get(i, 0)[0], linesMat.get(i, 0)[1] - dif);
@@ -371,9 +380,69 @@ public class StaveProcessor {
         }
     }
     
-    public Mat getLinesMat() {
-        return linesMat;
+    private void setStaffNum() {
+        staffNum = 0;
+        for (int i = 0; i < linesNum - 1; i++) {
+            if (cluster[i] == staffCluster) {
+                staffNum++;
+            }
+        }
+        staffNum++;
+        System.out.println("staffNum: " + staffNum);
     }
+    
+    private void setStavePos() {
+        stavePos = new double[staffNum];
+        int tempNum = 0;
+        
+        //TestClass test = new TestClass();
+        //test.matChannel(linesMat, linesMat.channels());
+        
+        for (int i = 0; i < linesNum - 1; i++) {
+            if (cluster[i] == staffCluster || i == linesNum - 2) {
+                /*for (int j = 0; j < linesMat.channels(); j++) {
+                    stavePos[tempNum][j] = linesMat.get(i, 0)[j];
+                }*/
+                stavePos[tempNum] = linesMat.get(i, 0)[1];
+                tempNum++;
+                //System.out.println(i + ".temp: " + tempNum);
+            }
+        }
+        System.out.println("set stave position");
+        
+        for (int i = 0; i < staffNum; i++) {
+            System.out.print(stavePos[i] + ", ");
+            if ((i + 1) % 5 == 0) System.out.println("");
+        }
+    }
+    
+    private void setStaffCluster() {
+        if (oneStaff) {
+            staffCluster = 2;
+        }else {
+            staffCluster = 1;
+        }
+    }
+    
+    private void setStaveWidth() {
+        if (oneStaff) {
+            staveWidth = stavePos[4] - stavePos[0];
+        }else {
+            /*double[] staveWidthTemp = new double[staffNum / 5];
+            int staveNumberTemp = 0;
+            for (int i = 0; i < staffNum; i++) {
+                
+                staveWidthTemp[staveNumberTemp] = stavePos[]
+            }*/
+    
+            staveWidth = stavePos[4] - stavePos[0];
+        }
+        System.out.println("staveWidth: " + staveWidth);
+    }
+    
+    /*public Mat getLinesMat() {
+        return linesMat;
+    }*/
     
     public Mat getLinedMat() {
         return linedMat;
@@ -385,5 +454,13 @@ public class StaveProcessor {
     
     public double getLineSpace() {
         return lineSpace;
+    }
+    
+    public double[] getStavePos() {
+        return stavePos;
+    }
+    
+    public double getStaveWidth() {
+        return staveWidth;
     }
 }
