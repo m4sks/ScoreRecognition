@@ -49,7 +49,7 @@ public class StaveProcessor {
     private double staveWidth;
     
     StaveProcessor(Mat inputMat, boolean isOnAStaff) {
-        //TestClass test = new TestClass();
+        TestClass test = new TestClass();
         linesMat = new Mat();
         linedMat = inputMat.clone();
         removedMat = inputMat.clone();
@@ -62,8 +62,8 @@ public class StaveProcessor {
         setStaffCluster();
         sortStave();
         drawLines();
-        //test.matChannel(linesMat, 4);
-        //test.matInfo(linedMat, "linedMat");
+        test.matChannel(linesMat, 4);
+        test.matInfo(linedMat, "linedMat");
         setYDif();
         clusteringStave();
         calcSpace();
@@ -109,8 +109,8 @@ public class StaveProcessor {
     private void sortStave() {
         double tempLX, tempLY, tempRX, tempRY;
         double mean1, mean2;
-        for (int i = 0; i < linesNum - 1; i++) {
-            for (int j = 0; j < linesNum - i - 1; j++) {
+        for (int i = 0; i < linesNum; i++) {
+            for (int j = 0; j < linesNum - i; j++) {
                 mean1 = (linesMat.get(j, 0)[1] + linesMat.get(j, 0)[3]) / 2;
                 mean2 = (linesMat.get(j + 1, 0)[1] + linesMat.get(j + 1, 0)[3]) / 2;
                 if (mean1 > mean2) {
@@ -149,6 +149,7 @@ public class StaveProcessor {
             cluster3[i] = kmeans(3)[i];
         }*/
         sortbyLineNumber();
+        System.out.println(yDif.length);
         for (int i = 0; i < yDif.length; i++) {
             //System.out.println("cluster: " + kmeans(3)[i] + ", yDif" + yDif[i]);
             System.out.println("cluster: " + cluster[i] + ", lineNumber: " + lineNumber[i] + ", yDif: " + yDif[i]);
@@ -165,7 +166,7 @@ public class StaveProcessor {
     private void sortbyYDif() {
         double yDifTemp;
         int lineNumberTemp;
-        for (int i = 1; i < yDif.length - 1; i++) {
+        for (int i = 1; i < yDif.length; i++) {
             for (int j = 0; j < yDif.length - i; j++) {
                 if (yDif[j] > yDif[j + 1]) {
                     yDifTemp = yDif[j];
@@ -235,7 +236,9 @@ public class StaveProcessor {
                 for (int j = 0; j < yDif.length; j++) {
                     if (cluster[j] == i) clusterDifSum[i] += yDif[j];
                 }
-                centroid[i] = clusterDifSum[i] / clusterNum[i];
+                if (clusterNum[i] > 0) {
+                    centroid[i] = clusterDifSum[i] / clusterNum[i];
+                }else centroid[i] = 0;
                 for (int j = 0; j < yDif.length; j++) {
                     clusterDist[j][i] = (centroid[i] - yDif[j]) * (centroid[i] - yDif[j]);
                 }
@@ -287,7 +290,7 @@ public class StaveProcessor {
             if (clusterMean[0] == 0) {
                 lineSpace = clusterMean[2];
             }else {
-                System.out.println("Warning: couldn't calculate lineSpace");
+                System.out.println("!! Warning !!: couldn't calculate lineSpace");
             }
         }else {
             lineSpace = clusterMean[1];
@@ -299,13 +302,13 @@ public class StaveProcessor {
     }
     
     private void calcWidth() {
-        linesWidth = 1.5;
+        linesWidth = 2.2; //1.5
         maxDoubleStave = 0;
         int doubleStave = 0;
         //System.out.println("meanYDif = " + meanYDif);
-        /*for (int i = 0; i < linesNum - 1; i++) {
+        for (int i = 0; i < linesNum - 1; i++) {
             System.out.println("line: " + i + ", cluster: " + cluster[i]);
-        }*/
+        }
         
         if (oneStaff) {
             for (int i = 0; i < linesNum - 1; i++) {
@@ -408,6 +411,7 @@ public class StaveProcessor {
                 //System.out.println(i + ".temp: " + tempNum);
             }
         }
+        stavePos[tempNum] = stavePos[tempNum - 1] + lineSpace;
         System.out.println("set stave position");
         
         for (int i = 0; i < staffNum; i++) {

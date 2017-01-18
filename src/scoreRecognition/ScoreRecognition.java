@@ -17,7 +17,8 @@ public class ScoreRecognition {
         //ImageLoader loader = new ImageLoader("./pictures/dotted-rest.png");
         //ImageLoader loader = new ImageLoader("./pictures/clairdelune_fixed.png");
         //ImageLoader loader = new ImageLoader("./pictures/linesTest.png");
-        ImageLoader loader = new ImageLoader("./pictures/five-staff-rule-1.png");
+        //ImageLoader loader = new ImageLoader("./pictures/five-staff-rule-1.png");
+        ImageLoader loader = new ImageLoader("./pictures/test03.png");
         
         //image processing
         ImageProcessor processor = new ImageProcessor();
@@ -45,10 +46,10 @@ public class ScoreRecognition {
         
         //viewer.show(loader.getInputMat());
         //viewer.show(processor.getInvertedMat());
-        viewer.show(symbolsRecognizer.getDetectedMat());
-        viewer.show(symbolsRecognizer.getRoiMat()[3]);
-        /*String labelNumber = "";
-        for (int i = 1; i < symbolsRecognizer.getRoiMat().length; i++) {
+        //viewer.show(symbolsRecognizer.getLabeledMat());
+        //viewer.show(symbolsRecognizer.getRoiMat()[3]);
+        //String labelNumber = "";
+        /*for (int i = 1; i < symbolsRecognizer.getRoiMat().length; i++) {
             viewer.show(symbolsRecognizer.getRoiMat()[i], labelNumber + i);
         }*/
     }

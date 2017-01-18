@@ -105,7 +105,7 @@ public class Labeler {
     public void drawLabelRect(Mat inputMat) {
         if (inputMat.channels() != 3) {
             Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_GRAY2BGR);
-            System.out.println("Gray to BGR");
+            //System.out.println("Gray to BGR");
         }
         Point p1, p2;
         Scalar color = new Scalar(0, 255, 0);
