@@ -1,5 +1,6 @@
 package scoreRecognition;
 
+import org.jfugue.player.*;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
@@ -48,15 +49,21 @@ public class SymbolsRecognizer {
         //** recognizing *********************
         System.out.println("start recognize note");
         //notesRecognizer.recognizeNotes(roiMat[3]);
+        String output = "";
         for (int i = 1; i < roiMat.length; i++) {
             System.out.println("* recognize roi " + i);
-            notesRecognizer.recognizeNotes(roiMat[i]);
+            output += notesRecognizer.recognizeNotes(roiMat[i], i);
             viewer.show(roiMat[i], ""+i);
         }
         System.out.println("end recognize note");
+        System.out.println("notes: " + output);
         /*for (int i = 1; i < roiMat.length; i++) {
             notesRecognizer.recognizeNotes(roiMat[i]);
         }*/
+        
+        //Play
+        Player player = new Player();
+        player.play(output);
         
     }
     

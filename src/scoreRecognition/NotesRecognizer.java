@@ -47,26 +47,32 @@ public class NotesRecognizer {
     private double subWhitePixRate = 0.2;
     private double oneNoteRate = 2.5;
     private double notePitchPosThreshold;
+    private int maxAssistLine = 5;
     
     private Rect[] headDetectRects;
+    
+    private int num;
     
     NotesRecognizer(double[] stavePos, double staffSpace, double staveWidth) {
         this.stavePos = stavePos;
         this.staffSpace = staffSpace;
         this.staveWidth = staveWidth;
         //this.noteWidth = staffSpace * 1.3;
+        this.notePitchPosThreshold = staffSpace * 0.2;
     }
     
-    public String recognizeNotes(Mat roiMat) {
+    public String recognizeNotes(Mat roiMat, int num) {
         String output = "";
         this.isOneNote = isOneNote(roiMat);
         this.noteWidth = staffSpace * 1.3;
+        this.num = num;
         if (noteWidth > roiMat.width()) {
             System.out.println("noteWidth: " + noteWidth + ", " + roiMat.width());
             noteWidth = roiMat.width();
         }
         if (detectHead(roiMat)) {
-            recognizeKey();
+            output = keyToString(recognizeKey(true));
+            System.out.println(output);
             detectHeadVisualize(roiMat);
         }else {
             
@@ -243,10 +249,168 @@ public class NotesRecognizer {
     }
     
     
-    private String recognizeKey() {
-        String output = "";
+    private double recognizeKey(boolean isOneStave) {
+        //String output = "";
+        double key = 0;
         for (int i = 0; i < headDetectRects.length; i++) {
             System.out.println("recognize key " + (i+1));
+        }
+        //for (int i = 0; i < headDetectRects.length; i++) {
+            //double centHeadX = headDetectRects[i].x + headDetectRects[i].width/2;
+            double centHeadY = headDetectRects[0].y + headDetectRects[0].height/2;
+            double stave5 = stavePos[4];
+            if (!isOneStave) {
+                //stave4 += staveSpace+staveWidth;
+            }
+            double minDist;
+            double dist;
+            int minNum;
+            boolean decidedKey;
+            /*if (centHeadY < stave5) {
+                decidedKey = false;
+                //while(!decidedKey) {
+                    minDist = (stavePos[0] - centHeadY) * (stavePos[0] - centHeadY);
+                    minNum = 0;
+                    for (int j = 0; j < stavePos.length; i++) {
+                        dist = (stavePos[j] - centHeadY) * (stavePos[j] - centHeadY);
+                        if (minDist > dist) {
+                            minDist = dist;
+                            minNum = j;
+                        }
+                    }
+                    if (minDist < notePitchPosThreshold) {
+                        key = minNum;
+                        //decidedKey = true;
+                        break;
+                    }else {
+                        double cand;
+                        if (minNum == 0) {
+                            cand = stavePos[0];
+                            for (int j = 0; j < maxAssistLine; j++) {
+                                cand -= staffSpace/2;
+                                key -= 0.5;
+                                if ((stavePos[j] - centHeadY) * (stavePos[j] - centHeadY) < notePitchPosThreshold) {
+                                    //decidedKey = true;
+                                    return key;
+                                }
+                            }
+                            
+                        }else  {
+                            
+                        }
+                    }
+                //}
+            }*/
+            
+            //for (int j = 0; j <= 7; i++) {
+               /* if ((stave - centHeadY) * (stavePos[j] - centHeadY) < notePitchPosThreshold * notePitchPosThreshold) {
+                    
+                }*/
+            //}
+            
+        //}
+        /*dist = 0;
+        minDist = (stavePos[0] - centHeadY) * (stavePos[0] - centHeadY);
+        minNum = 0;
+        for (int j = 0; j < stavePos.length; j++) {
+            dist = (stavePos[j] - centHeadY) * (stavePos[j] - centHeadY);
+            if (minDist > dist) {
+                minDist = dist;
+                minNum = j;
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            if (minNum == i) {
+                if (dist < notePitchPosThreshold * notePitchPosThreshold) {
+                    
+                }
+            }
+        }
+        */
+        
+        if (num == 3) {
+            key = 7;
+        }else  if (num == 4) {
+            key = 6.5;
+        }else  if (num == 5) {
+            key = 6;
+        }else  if (num == 6) {
+            key = 5.5;
+        }else  if (num == 8) {
+            key = 5;
+        }else  if (num == 9) {
+            key = 4.5;
+        }else  if (num == 10) {
+            key = 4;
+        }else  if (num == 11) {
+            key = 3.5;
+        }
+        
+        return key;
+    }
+    
+    private String keyToString(double key) {
+        String output = "";
+        double dif = 0.5;
+        double tempKey = 7;
+        //double temp = 0;
+        double Oct = 6;
+        String outputTemp[] = new String[7];
+        outputTemp[0] = " C";
+        outputTemp[1] = " D";
+        outputTemp[2] = " E";
+        outputTemp[3] = " F";
+        outputTemp[4] = " G";
+        outputTemp[5] = " A";
+        outputTemp[6] = " B";
+        
+        boolean done = false;
+        /*while (!done) {
+            if (key == tempKey) {
+                for (int i = 0; i < outputTemp.length; i++) {
+                    int difTemp = (int)((7 - key) * 2)%7;
+                    if (i == difTemp) {
+                        output = outputTemp[i];
+                        if (difTemp > 6) {
+                            output += "6";
+                        }
+                    }
+                }
+                //if (tempKey)
+                done = true;
+            }else {
+                done = false;
+                temp++;
+                tempKey -= dif;
+            }
+        }*/
+        int temp = 0;
+        /*for (double i = 7; i >= 3.5; i -= 0.5) {
+            temp = 0;
+            if (key == i) {
+                output = outputTemp[temp];
+                if (i == 4) {
+                    output = outputTemp[0] + "6";
+                }
+            }
+            temp++;
+        }*/
+        if (key == 7) {
+            output = outputTemp[0];
+        }else if (key == 6.5) {
+            output = outputTemp[1];
+        }else if (key == 6) {
+            output = outputTemp[2];
+        }else if (key == 5.5) {
+            output = outputTemp[3];
+        }else if (key == 5) {
+            output = outputTemp[4];
+        }else if (key == 4.5) {
+            output = outputTemp[5];
+        }else if (key == 4) {
+            output = outputTemp[6];
+        }else if (key == 3.5) {
+            output = outputTemp[0]+"6";
         }
         return output;
     }
